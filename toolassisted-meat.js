@@ -154,28 +154,28 @@ var CHARS = [
       .attr("class", "ROW")                               // Set the class of the <div> element to "ROW"
       .selectAll().data(function(d){return d;}).enter().append("button") // Create an empty group, bind the data to the group, create buttons for each datum in the data
       .attr("class", function(d){ return "CHAR CHAR"+d;}) // Set the buttons' class names to "CHAR CHAR"+[Character Code]
-      .on("click",function(d,i){
+      .on("click",function(d,i){                          // Set onClick function to the buttons
         if (d == "HELP") {
           //var win = window.open("https://twitter.com/TOOLASSlSTED/status/731544334781300736", '_blank');
           //win.focus();
-          d3.select("#YUNOC").node().scrollIntoView();
+          d3.select("#YUNOC").node().scrollIntoView();    // Scroll to the legend and helpful links
           return;
         } else if (d == "VIEW TOTAL TOP") {
-          var t1 = d3.selectAll("#TUT")[0][0];
+          var t1 = d3.selectAll("#TUT")[0][0];            // Select element with id of "TUT" (the actual <div> rather than a selection)
           var t2 = d3.selectAll("#TOTALS")[0][0];
           var t3 = d3.selectAll("#OKIOKI")[0][0];
           var t4 = d3.selectAll("#FRAMES")[0][0];
           var t5 = d3.selectAll("#KD")[0][0];
-          var t0 = t1.parentNode;
+          var t0 = t1.parentNode;                         // reference to the <body>
           t0.insertBefore(t2,t1);
           t0.insertBefore(t3,t1);
           t0.insertBefore(t4,t1);
           t0.insertBefore(t5,t1);
           return;
-        } else if (d == "STICK OKI") {
-          var stick = !d3.select("#OKIOKI").classed("STICK");
-          d3.select("#OKIOKI").classed("STICK",stick);
-          d3.select(this).classed("SEL",stick);
+        } else if (d == "STICK OKI") {                        // "Stick" the OKI Timeline to the bottom of the screen
+          var stick = !d3.select("#OKIOKI").classed("STICK"); // Boolean value, value is the opposite of whether the Oki Timeline is stuck to the bottom of the screen (sticky)
+          d3.select("#OKIOKI").classed("STICK",stick);        // Set whether the OKI Timeline is sticky
+          d3.select(this).classed("SEL",stick);               // Set whether the "STICK OKI" button is "selected" (affects appearance of button)
           return;
         } else if (d == "TOTAL2") {
           var t1 = d3.selectAll("#KILLS")[0][0];
@@ -253,7 +253,7 @@ var CHARS = [
           MECOKI(1); UCOKI(OKILIST[MEOKI].FRAMEKILL, false);
           UCHASH();
 
-      })
+      })  // end of onClick function
       .text(function(d,i){return d;});
 
 function UCTOP1() {
