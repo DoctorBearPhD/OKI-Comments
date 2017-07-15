@@ -78,6 +78,9 @@ function MECHASH() {
 
 }
 
+/*
+ * Hashes current selections and OKI Setup. (Make save-data)
+ */
 function UCHASH() {
 
   var h = "#" + (HASHCHAR) + "/" + (+HASHKD-1) + "/" + (+HASHKDBR-1) + "/" + (+HASHKDR-1) + "/"
@@ -145,10 +148,12 @@ var CHARS = [
 ]
 ];
 
-  var CDIV = d3.select("#CHARS");
-  CDIV.selectAll("div").data(CHARS).enter().append("div")
-      .attr("class", function(d,i) {return "ROW"; })
-      .selectAll("button").data(function(d){return d;}).enter().append("button").attr("class", function(d){ return "CHAR CHAR"+d;})
+// Show the Character Buttons
+  var CDIV = d3.select("#CHARS");                         // Select one element in the DOM which has an id of "CHARS" (selects the section containing buttons)
+  CDIV.selectAll().data(CHARS).enter().append("div")      // Create an empty group/selection within #CHARS, bind the CHARS array as the selection's data, and create a <div> in the group
+      .attr("class", "ROW")                               // Set the class of the <div> element to "ROW"
+      .selectAll().data(function(d){return d;}).enter().append("button") // Create an empty group, bind the data to the group, create buttons for each datum in the data
+      .attr("class", function(d){ return "CHAR CHAR"+d;}) // Set the buttons' class names to "CHAR CHAR"+[Character Code]
       .on("click",function(d,i){
         if (d == "HELP") {
           //var win = window.open("https://twitter.com/TOOLASSlSTED/status/731544334781300736", '_blank');
