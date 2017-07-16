@@ -214,13 +214,13 @@ var CHARS = [
           MECOKI(1); UCOKI(OKILIST[MEOKI].FRAMEKILL, false);
           UCHASH();
           return;
-        } else if (d == "FRAME KILL") {
-
-          TOTALSDIV.selectAll("*").remove();
-
+        } else if (d == "FRAME KILL") {       // Variables and functions in this section are defined later - around line 650 at time of writing
+          TOTALSDIV.selectAll("*").remove();  // Remove everything in FRAMEKILLS if anything exists.
+          
+          // Make a new <div> in FRAMEKILLS for each amount of total frames (1 to 69) with text "FRAME KILL <#>"
           for (var total=1;total<70;total++) {
-            TOTALSDIV.append("div").text("\nFRAME KILL " + total).classed("FRAMEKILL",true);
-            UCTOTALROW("FRAME KILL " + total + " ",0,0,total);
+            TOTALSDIV.append("div").text("\nFRAME KILL " + total).classed("FRAMEKILL",true); 
+            UCTOTALROW("FRAME KILL " + total + " ",0,0,total);  // see definition of function for more info
           }
 
           TOTALSDIV.node().scrollIntoView();
@@ -228,12 +228,11 @@ var CHARS = [
           return;
         }
 
-        var p = d3.select(this.parentNode.parentNode).datum();
-        d3.selectAll(".CHAR").classed("SEL",false);
-        d3.select(this).classed("SEL",true);
+        d3.selectAll(".CHAR").classed("SEL",false); // unhighlight all buttons
+        d3.select(this).classed("SEL",true);        // highlight clicked button
         
-        HASHCHAR = d;
-        d3.tsv(HASHCHAR+".txt", UCGILLEY);
+        HASHCHAR = d;                               // set character hash to button's [character code]
+        d3.tsv(HASHCHAR+".txt", UCGILLEY);          // parse the character's data file as a [tab-separated value] file... and call the big function!
 
           OKILIST = [{FRAMEKILL:1,STARTUP:0,ACTIVE:0,RECOVERY:0,MOVE:""}
                         ,{FRAMEKILL:1,STARTUP:0,MECACTIVE:"",UCACTIVE:"",ACTIVE:0,RECOVERY:0,MOVE:"",DATA:""}
@@ -254,7 +253,7 @@ var CHARS = [
           UCHASH();
 
       })  // end of onClick function
-      .text(function(d,i){return d;});
+      .text(function(d,i){return d;});    // Set the text of each button to the value in the data at its position/index
 
 function UCTOP1() {
   var ADV = d3.select("#TOP1");
@@ -405,7 +404,7 @@ function MECOKI(oki) {
   d3.select("#ADVOKI"+oki).classed("UCOKI",true);
   d3.select(d3.select("#ADVOKI"+oki).node().previousElementSibling).classed("UCOKI",true);
 }
-
+/** Update the OKI Calculator to show info for the character. */
 function UCGILLEY(rows){
 
   var REDDIT = d3.select("#REDDIT");
@@ -648,6 +647,12 @@ function UCGILLEY(rows){
 var TOTALSDIV = d3.select("#FRAMEKILLS");
 var TOTALROWS = [];
 
+/* As <div>s are created in FRAMEKILLS, make new <div>s for each combination of moves whose sum equal the [total frames], then:
+ * 1) set the text as "FRAME KILL <#> , " followed by 
+ * 2) [the amount of frames the move takes] , [the move name] + [<span> containing the command], then
+ * 3) repeat step #2 until the sum is equal to [total frames]
+ * (separated by commas)
+ */
 function UCTOTALROW(pre,start,run,total) {
   TOTALROWS.forEach(function(row,i){
     if (i<start) return;
@@ -733,4 +738,4 @@ d3.select("body").on("keydown", function() {
 
 
 d3.tsv(HASHCHAR+".txt", UCGILLEY);
-d3.selectAll(".CHAR"+HASHCHAR).classed("SEL",true);
+d3.selectAll(".CHAR"+HASHCHAR).classed("SEL",true); // sets the selected character's corresponding button to be selected
