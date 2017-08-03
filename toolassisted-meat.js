@@ -131,7 +131,7 @@ REDDITEMBEDCHAR["GOK"] = REDDITEMBED1 + 'https://www.reddit.com/r/SFV_AKUMA/comm
 
 /* An array containing one array which contains the 3-letter codename of each character */
 var CHARS = [
-["ALX", "BLR", //"BLR2",
+["ABG", "ALX", "BLR", //"BLR2",
 "BRD", //"BRD2", 
 "BSN", "CMY", "CNL", //"CNL2"
 "DSM", "ED",
