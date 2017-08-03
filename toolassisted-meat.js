@@ -481,6 +481,7 @@ function UCGILLEY(rows){
               if (isNaN(parseInt(bdn))) return -1;
               return +adn < +bdn ? 1 : +adn > +bdn ? -1 : a.row < b.row ? -1 : a.row > b.row ? 1 : 0;
             });});
+
   // Create the table rows. Rows classed "UC" are selected/highlighted (should only be one ".UC" at a time per table).
   KDTABLE.append("tbody").selectAll().data(                                   // Create an empty group with the following data:
     rows.filter(function(d){return !isNaN(DATA_KD(d)) && DATA_KD(d) != "";})) // rows whose KD column value is a number and is not blank. (blank = 0)
@@ -491,6 +492,7 @@ function UCGILLEY(rows){
             // Create a new group, set data as a new associative array of KD types and values [e.g. "KD", "+107"], then append the other data
             .selectAll().data(function(d){ return [{key:"KD",value:"+"+DATA_KD(d)},{key:"KDR",value:"+"+DATA_KDR(d)},{key:"KDBR",value:"+"+DATA_KDBR(d)}].concat(d3.entries(d));})
             .enter().append("td").text(function(d){return d.value;}); // Add table cells and fill with values
+
   KDTABLE.selectAll("tbody tr").on("click",function(d){   // *Changed to add the click listener to the row, rather than each cell*
               var p = this;
               var pd = d3.select(p).datum();
