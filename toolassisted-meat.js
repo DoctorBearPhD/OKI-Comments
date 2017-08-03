@@ -239,6 +239,7 @@ var CHARS = [
          * 
          * Since no error handling is specified, I changed this to use the request.on("load", function...) listener
          * instead of passing the function as a callback. This way, the page doesn't break if an error occurs.
+         * It only calls UCGILLEY on success.
          */
         d3.tsv(HASHCHAR+".txt").send("GET").on("load", UCGILLEY);
 
@@ -269,21 +270,24 @@ function UCTOP1() {
   for (var i=1;i<=119;i++) {
     adv += "<span class='UCLICK' onclick='UCOKI("+i+")'>" + (i%10) + "</span>";
   }
-  ADV.html(adv);
+  ADV.html(adv); // set the html in #TOP1 to the value of 'adv'
 }
 // The rest of the UC functions add the other rows of the Timeline.
 function UCKD(kd, hash) {
-  var ADV = d3.select("#ADVKD");
+  var ADV = d3.select("#ADVKD"); // Select the Timeline's KD Advantage row (body)
   var adv = ""
-  for (var i=1;i<=119;i++) {
-    var text = i<kd ? CHARPLUS : i>=kd+10 ? CHARMINUS : ((i-kd+1)%10);
-    adv += "<span class='UCLICK" + (i<kd||i>=kd+10?"":" WAKEUP") + "' onclick='UCKD("+i+")'>" + text + "</span>";
-  }
+  for (var i=1;i<=119;i++) {  // for every frame, starting at frame 1...
+    var text = i<kd ? CHARPLUS : i>=kd+10 ? CHARMINUS : ((i-kd+1)%10); // the text will be either a dot or the wakeup-frame number (1-10 [0=10])
+    adv += "<span class='UCLICK" + (i<kd||i>=kd+10?"":" WAKEUP") + // set the text and style
+    // "' onclick='UCKD("+i+")'>" + text + "</span>"; 
+    "'>" + text + "</span>"; 
+  } 
+  // OKI12GAP is the difference of OKI2's start from OKI1's end (OKI2.start - OK1.end = OKI12GAP)
   adv += "<span class='ADVPLUS'> " + "+" + ((kd-1) + "     ").slice(0,3) + " U HIT " + (kd + "     ").slice(0,3) + " &middot; <span id='OKI12GAP'>0</span>F OKI1-OKI2</span>";
   ADV.html(adv);
   HASHKD = kd;
   if (hash == undefined) UCHASH();
-  d3.select("#STYLEKD").text(".GRID > span:nth-child("+kd+") { text-decoration:underline; }");
+  d3.select("#STYLEKD").text(".GRID > span:nth-child("+kd+") { text-decoration:underline; }"); // underlines the text in the column representing the first frame of wakeup
   var OKI12GAP = OKILIST[2].FRAMEKILL - (OKILIST[1].FRAMEKILL + OKILIST[1].STARTUP + OKILIST[1].ACTIVE + OKILIST[1].RECOVERY-1);
   d3.select("#OKI12GAP").text(("     " + OKI12GAP).slice(-3));
 }
@@ -292,27 +296,32 @@ function UCKDBR(kd, hash) {
   var adv = ""
   for (var i=1;i<=119;i++) {
     var text = i<kd ? CHARPLUS : i>=kd+10 ? CHARMINUS : ((i-kd+1)%10);
-    adv += "<span class='UCLICK" + (i<kd||i>=kd+10?"":" WAKEUP") + "' onclick='UCKDBR("+i+",false);UCKDR("+(i-5)+")'>" + text + "</span>";
+    adv += "<span class='UCLICK" + (i<kd||i>=kd+10?"":" WAKEUP") + 
+    // "' onclick='UCKDBR("+i+",false);UCKDR("+(i-5)+")'>" + text + "</span>";
+    "'>" + text + "</span>";
   }
   adv += "<span class='ADVPLUS'> " + "+" + ((kd-1) + "     ").slice(0,3) + " U HIT " + (kd + "     ").slice(0,3) + " &middot; MOVE <span id='KDMOVE'></span></span>";
   ADV.html(adv);
   HASHKDBR = kd;
   if (hash == undefined) UCHASH();
-  d3.select("#STYLEKDBR").text(".GRID > span:nth-child("+kd+") { text-decoration:underline; }");
+  d3.select("#STYLEKDBR").text(".GRID > span:nth-child("+kd+") { text-decoration:underline; }"); // underlines the text in the column representing the first frame of wakeup
 }
 function UCKDR(kd, hash) {
   var ADV = d3.select("#ADVKDR");
   var adv = ""
   for (var i=1;i<=119;i++) {
     var text = i<kd ? CHARPLUS : i>=kd+10 ? CHARMINUS : ((i-kd+1)%10);
-    adv += "<span class='UCLICK" + (i<kd||i>=kd+10?"":" WAKEUP") + "' onclick='UCKDR("+i+",false);UCKDBR("+(i+5)+");'>" + text + "</span>";
+    adv += "<span class='UCLICK" + (i<kd||i>=kd+10?"":" WAKEUP") + 
+    // "' onclick='UCKDR("+i+",false);UCKDBR("+(i+5)+");'>" + text + "</span>";
+    "'>" + text + "</span>";
   }
   adv += "<span class='ADVPLUS'> " + "+" + ((kd-1) + "     ").slice(0,3) + " U HIT " + (kd + "     ").slice(0,3) + " &middot;  CMD <span id='KDCMD'></span></span>";
   ADV.html(adv);  
   HASHKDR = kd;
   if (hash == undefined) UCHASH();
-  d3.select("#STYLEKDR").text(".GRID > span:nth-child("+kd+") { text-decoration:underline; }");
+  d3.select("#STYLEKDR").text(".GRID > span:nth-child("+kd+") { text-decoration:underline; }"); // underlines the text in the column representing the first frame of wakeup
 }
+// Shows numbers counting up: 1-9, then the tens digit, repeating to end
 function UCFK() {
   var ADV = d3.select("#FK");
   var adv = ""
@@ -321,6 +330,7 @@ function UCFK() {
   }
   ADV.html(adv);
 }
+//Update the Timeline body
 function UCOKI(kd, hash) {
   var active = OKILIST[MEOKI].ACTIVE;
   var recovery = OKILIST[MEOKI].RECOVERY;
@@ -338,7 +348,7 @@ function UCOKI(kd, hash) {
   }
 
 
-    var end = FRAMEKILL+startup+active+recovery-1;
+    var end = FRAMEKILL+total-1;
     end = end > 119 ? 119 : end;
     //d3.selectAll(".UCY"+MEOKI).classed("UCY"+MEOKI, false);
     //for (var i=FRAMEKILL;i<=(end>119?119:end);i++) {
@@ -347,7 +357,7 @@ function UCOKI(kd, hash) {
     d3.select("#STYLEOKI"+MEOKI).text(".GRID > span:nth-child(n+"+FRAMEKILL+"):nth-child(-n+"+end+") { background-color:"+(MEOKI<3?"#022":"#330")+"; }");
 
 
-  var fk = FRAMEKILL;
+  //var fk = FRAMEKILL; // Unused!
   OKILIST[MEOKI].FRAMEKILL = FRAMEKILL;
 
   var ADV = d3.select("#ADVOKI"+MEOKI);
@@ -408,9 +418,9 @@ function UCOKI(kd, hash) {
 
 function MECOKI(oki) {
   MEOKI = oki;
-  d3.selectAll(".UCOKI").classed("UCOKI",false);
-  d3.select("#ADVOKI"+oki).classed("UCOKI",true);
-  d3.select(d3.select("#ADVOKI"+oki).node().previousElementSibling).classed("UCOKI",true);
+  d3.selectAll(".UCOKI").classed("UCOKI",false);  // 'Deselect' the currently selected row (header and body) in the Timeline
+  d3.select("#ADVOKI"+oki).classed("UCOKI",true); // 'Select' the row (body) passed in the parameter (oki)
+  d3.select(d3.select("#ADVOKI"+oki).node().previousElementSibling).classed("UCOKI",true); // 'Select' the row header
 }
 
 /** Update the OKI Calculator to show info for the character. 
@@ -438,7 +448,7 @@ function UCGILLEY(rows){
   FRAMES.append("br");
   // TOTALS.append("br");
 
-  var keys = d3.keys(rows[0]); // Store the keys [column names] to an array. NOTE: This references the undefined "rows" parameter...
+  var keys = d3.keys(rows[0]); // Store the keys [column names] to an array.
 
   // Functions which return the value at the specified column in the data
   function DATA_KDBR(d) { return d["KDRB Adv."] || d["HIT KDBR"] || d["CH KDBR"]; }
@@ -471,15 +481,18 @@ function UCGILLEY(rows){
               if (isNaN(parseInt(bdn))) return -1;
               return +adn < +bdn ? 1 : +adn > +bdn ? -1 : a.row < b.row ? -1 : a.row > b.row ? 1 : 0;
             });});
-  // Create the table rows
+
+  // Create the table rows. Rows classed "UC" are selected/highlighted (should only be one ".UC" at a time per table).
   KDTABLE.append("tbody").selectAll().data(                                   // Create an empty group with the following data:
     rows.filter(function(d){return !isNaN(DATA_KD(d)) && DATA_KD(d) != "";})) // rows whose KD column value is a number and is not blank. (blank = 0)
     .enter().append("tr")                                                     // add a row to the table.
-            // Set the class of the rows to "UC" if KD advantage values in the data match the values in the hash.
+            // Set the class of the rows to "UC" if KD advantage values in the data match the values in the hash. 
+            // *(Causes multiple rows to be selected if multiple rows match (e.g. selecting Boxer's TAP 7, then refreshing).)
             .classed("UC",function(d){return +DATA_KDBR(d)==HASHKDBR-1 && +DATA_KDR(d)==HASHKDR-1 && +DATA_KD(d)==HASHKD-1; })
             // Create a new group, set data as a new associative array of KD types and values [e.g. "KD", "+107"], then append the other data
             .selectAll().data(function(d){ return [{key:"KD",value:"+"+DATA_KD(d)},{key:"KDR",value:"+"+DATA_KDR(d)},{key:"KDBR",value:"+"+DATA_KDBR(d)}].concat(d3.entries(d));})
-            .enter().append("td").text(function(d){return d.value;}); // Add table cells and data
+            .enter().append("td").text(function(d){return d.value;}); // Add table cells and fill with values
+
   KDTABLE.selectAll("tbody tr").on("click",function(d){   // *Changed to add the click listener to the row, rather than each cell*
               var p = this;
               var pd = d3.select(p).datum();
@@ -692,7 +705,7 @@ function UCTOTALROW(pre,start,run,total) {
   });
 }
 
-
+// Make and show hash, populate Timeline
 MECHASH();
 
 UCTOP1();
@@ -715,7 +728,7 @@ MECOKI(7);
 UCOKI(OKILIST[MEOKI].FRAMEKILL, false);
 UCFK();
 UCHASH();
-
+// Set keyboard listeners
 d3.select("body").on("keydown", function() {
   switch(d3.event.keyCode) {
     case 0x61: case 0x31: MECOKI(1); break;
@@ -758,5 +771,5 @@ d3.select("body").on("keydown", function() {
 
 
 
-d3.tsv(HASHCHAR+".txt", UCGILLEY);
+d3.tsv(HASHCHAR+".txt").send("GET").on("load", UCGILLEY); 
 d3.selectAll(".CHAR"+HASHCHAR).classed("SEL",true); // sets the selected character's corresponding button to be selected
