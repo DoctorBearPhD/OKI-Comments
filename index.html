@@ -321,10 +321,6 @@
   .MOVEDATA {
     color: #999;
   }
-
-  button.CHARRESET {
-    margin-left: 50px;
-  }
  
   li {
     white-space: nowrap;
@@ -371,7 +367,7 @@
 <!-- The table of KD Moves that appears under the Character Buttons. -->
 <div id="KD"></div>
 
-<!-- The Grid where the Oki setup is displayed. Referred to henceforth as the Oki Grid. -->
+<!-- The Grid where the Oki setup is displayed. Referred to henceforth as the Oki Grid (or Timeline). -->
 <div id="OKIOKI">
 <pre id="OKI">
 <span class="UCPOINT"      >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span id="TOP10"   class="GRID">0........1.........2.........3.........4.........5.........6.........7.........8.........9.........10........11........</span>
@@ -444,6 +440,9 @@ U KEY U SHORTCUT LOL
 
 <!-- Loads the (minified) D3 library. -->
 <script src="d3.min.js"></script>
+
+<!-- Loads the D3 library. Breaks the page, since method calls still refer to minified version. -->
+<!-- <script src="d3.v4.js" /> -->
 
 <!-- **************************************************************
 		The meat and potatoes: this is where the logic is housed!

@@ -143,14 +143,54 @@ var CHARS = [
 "NSH", "RMK", 
 "RSD", "RYU", //"RYU2", 
 "URN", "VEG", //"VEG2",
-"ZGF",
-"RESET OKI","FRAME KILL","HELP","VIEW TOTAL TOP","STICK OKI"
-]
+"ZGF"]
 ];
+var EXTRA = [["RESET OKI","FRAME KILL","HELP","VIEW TOTAL TOP","STICK OKI"]];
 
 // Show the Character Buttons
   var CDIV = d3.select("#CHARS");                         // Select one element in the DOM which has an id of "CHARS" (selects the section containing buttons)
   CDIV.selectAll().data(CHARS).enter().append("div")      // Create an empty group/selection within #CHARS, bind the CHARS array as the selection's data, and create a <div> in the group
+      .attr("class", "ROW")                               // Set the class of the <div> element to "ROW"
+      .selectAll().data(function(d){return d;}).enter().append("button") // Create an empty group, bind the data to the group, create buttons for each datum in the data
+      .attr("class", function(d){ return "CHAR CHAR"+d;}) // Set the buttons' class names to "CHAR CHAR"+[Character Code]
+      .on("click",function(d,i){                          // Set onClick function to the buttons
+        d3.selectAll(".CHAR").classed("SEL",false); // Unhighlight all buttons
+        d3.select(this).classed("SEL",true);        // Highlight clicked button
+        
+        HASHCHAR = d;                               // Set character hash to [character code] stored in button
+        
+        /* Request a TSV file (e.g. ALX.txt) - or txt file in our case - 
+         * and asynchronously call UCGILLEY when the request succeeds/fails.
+         * d3.tsv() passes the result to UCGILLEY if the request succeeds, otherwise it passes the error.
+         * 
+         * Since no error handling is specified, I changed this to use the request.on("load", function...) listener
+         * instead of passing the function as a callback. This way, the page doesn't break if an error occurs.
+         * It only calls UCGILLEY on success.
+         */
+        d3.tsv(HASHCHAR+".txt").send("GET").on("load", UCGILLEY);
+
+          OKILIST = [{FRAMEKILL:1,STARTUP:0,ACTIVE:0,RECOVERY:0,MOVE:""}
+                        ,{FRAMEKILL:1,STARTUP:0,MECACTIVE:"",UCACTIVE:"",ACTIVE:0,RECOVERY:0,MOVE:"",DATA:""}
+                        ,{FRAMEKILL:1,STARTUP:0,MECACTIVE:"",UCACTIVE:"",ACTIVE:0,RECOVERY:0,MOVE:"",DATA:""}
+                        ,{FRAMEKILL:1,STARTUP:0,MECACTIVE:"",UCACTIVE:"",ACTIVE:0,RECOVERY:0,MOVE:"",DATA:""}
+                        ,{FRAMEKILL:1,STARTUP:0,MECACTIVE:"",UCACTIVE:"",ACTIVE:0,RECOVERY:0,MOVE:"",DATA:""}
+                        ,{FRAMEKILL:1,STARTUP:0,MECACTIVE:"",UCACTIVE:"",ACTIVE:0,RECOVERY:0,MOVE:"",DATA:""}
+                        ,{FRAMEKILL:1,STARTUP:0,MECACTIVE:"",UCACTIVE:"",ACTIVE:0,RECOVERY:0,MOVE:"",DATA:""}
+                        ,{FRAMEKILL:1,STARTUP:0,MECACTIVE:"",UCACTIVE:"",ACTIVE:0,RECOVERY:0,MOVE:"",DATA:""}];
+
+          MECOKI(7); UCOKI(OKILIST[MEOKI].FRAMEKILL, false);
+          MECOKI(6); UCOKI(OKILIST[MEOKI].FRAMEKILL, false);
+          MECOKI(5); UCOKI(OKILIST[MEOKI].FRAMEKILL, false);
+          MECOKI(4); UCOKI(OKILIST[MEOKI].FRAMEKILL, false);
+          MECOKI(3); UCOKI(OKILIST[MEOKI].FRAMEKILL, false);
+          MECOKI(2); UCOKI(OKILIST[MEOKI].FRAMEKILL, false);
+          MECOKI(1); UCOKI(OKILIST[MEOKI].FRAMEKILL, false);
+          UCHASH();
+
+      })  // end of onClick function
+      .text(function(d,i){return d;});    // Set the text of each button to the value in the data at its position/index
+// Setup row of non-character-related buttons
+CDIV.selectAll().data(EXTRA).enter().append("div")      // Create an empty group/selection within #CHARS, bind the CHARS array as the selection's data, and create a <div> in the group
       .attr("class", "ROW")                               // Set the class of the <div> element to "ROW"
       .selectAll().data(function(d){return d;}).enter().append("button") // Create an empty group, bind the data to the group, create buttons for each datum in the data
       .attr("class", function(d){ return "CHAR CHAR"+d;}) // Set the buttons' class names to "CHAR CHAR"+[Character Code]
@@ -227,42 +267,9 @@ var CHARS = [
 
           return;
         }
-
-        d3.selectAll(".CHAR").classed("SEL",false); // Unhighlight all buttons
-        d3.select(this).classed("SEL",true);        // Highlight clicked button
-        
-        HASHCHAR = d;                               // Set character hash to [character code] stored in button
-        
-        /* Request a TSV file (e.g. ALX.txt) - or txt file in our case - 
-         * and asynchronously call UCGILLEY when the request succeeds/fails.
-         * d3.tsv() passes the result to UCGILLEY if the request succeeds, otherwise it passes the error.
-         * 
-         * Since no error handling is specified, I changed this to use the request.on("load", function...) listener
-         * instead of passing the function as a callback. This way, the page doesn't break if an error occurs.
-         * It only calls UCGILLEY on success.
-         */
-        d3.tsv(HASHCHAR+".txt").send("GET").on("load", UCGILLEY);
-
-          OKILIST = [{FRAMEKILL:1,STARTUP:0,ACTIVE:0,RECOVERY:0,MOVE:""}
-                        ,{FRAMEKILL:1,STARTUP:0,MECACTIVE:"",UCACTIVE:"",ACTIVE:0,RECOVERY:0,MOVE:"",DATA:""}
-                        ,{FRAMEKILL:1,STARTUP:0,MECACTIVE:"",UCACTIVE:"",ACTIVE:0,RECOVERY:0,MOVE:"",DATA:""}
-                        ,{FRAMEKILL:1,STARTUP:0,MECACTIVE:"",UCACTIVE:"",ACTIVE:0,RECOVERY:0,MOVE:"",DATA:""}
-                        ,{FRAMEKILL:1,STARTUP:0,MECACTIVE:"",UCACTIVE:"",ACTIVE:0,RECOVERY:0,MOVE:"",DATA:""}
-                        ,{FRAMEKILL:1,STARTUP:0,MECACTIVE:"",UCACTIVE:"",ACTIVE:0,RECOVERY:0,MOVE:"",DATA:""}
-                        ,{FRAMEKILL:1,STARTUP:0,MECACTIVE:"",UCACTIVE:"",ACTIVE:0,RECOVERY:0,MOVE:"",DATA:""}
-                        ,{FRAMEKILL:1,STARTUP:0,MECACTIVE:"",UCACTIVE:"",ACTIVE:0,RECOVERY:0,MOVE:"",DATA:""}];
-
-          MECOKI(7); UCOKI(OKILIST[MEOKI].FRAMEKILL, false);
-          MECOKI(6); UCOKI(OKILIST[MEOKI].FRAMEKILL, false);
-          MECOKI(5); UCOKI(OKILIST[MEOKI].FRAMEKILL, false);
-          MECOKI(4); UCOKI(OKILIST[MEOKI].FRAMEKILL, false);
-          MECOKI(3); UCOKI(OKILIST[MEOKI].FRAMEKILL, false);
-          MECOKI(2); UCOKI(OKILIST[MEOKI].FRAMEKILL, false);
-          MECOKI(1); UCOKI(OKILIST[MEOKI].FRAMEKILL, false);
-          UCHASH();
-
       })  // end of onClick function
       .text(function(d,i){return d;});    // Set the text of each button to the value in the data at its position/index
+
 /** Shows the clickable, single-digits row of the OKI Timeline */
 function UCTOP1() {
   var ADV = d3.select("#TOP1");
@@ -323,7 +330,7 @@ function UCKDR(kd, hash) {
 }
 // Shows numbers counting up: 1-9, then the tens digit, repeating to end
 function UCFK() {
-  var ADV = d3.select("#FK");
+  var ADV = d3.select("#FK"); // the numbers at the bottom of the Timeline
   var adv = ""
   for (var i=1;i<=119;i++) {
     adv += "<span class='UCLICK' onclick='UCOKI("+i+")'>" + (i%10) + "</span>";
@@ -441,7 +448,7 @@ function UCGILLEY(rows){
   FRAMES.selectAll("*").remove();
   TOTALS.selectAll("*").remove();
   // Create tables in the <div>s and set their class to "FRAMES"
-  var FRAMETABLE = FRAMES.append("div").append("table").classed("FRAMES",true);
+  var FRAMETABLE = FRAMES.append("table").classed("FRAMES",true);
   var KDTABLE = KD.append("div").append("table").classed("FRAMES",true);
   var TOTALSTABLE = TOTALS.append("div").append("table").classed("FRAMES",true);
   FRAMES.append("br");
@@ -481,10 +488,9 @@ function UCGILLEY(rows){
               if (isNaN(parseInt(bdn))) return -1;
               return +adn < +bdn ? 1 : +adn > +bdn ? -1 : a.row < b.row ? -1 : a.row > b.row ? 1 : 0;
             });});
-
   // Create the table rows. Rows classed "UC" are selected/highlighted (should only be one ".UC" at a time per table).
-  KDTABLE.append("tbody").selectAll().data(                                   // Create an empty group with the following data:
-    rows.filter(function(d){return !isNaN(DATA_KD(d)) && DATA_KD(d) != "";})) // rows whose KD column value is a number and is not blank. (blank = 0)
+  KDTABLE.append("tbody").selectAll().data(                                   // Create an empty group and for each of the following data:
+    rows.filter(function(d){return !isNaN(DATA_KD(d)) && DATA_KD(d) != "";})) // moves whose [KD Advantage] value is a number and is not blank,
     .enter().append("tr")                                                     // add a row to the table.
             // Set the class of the rows to "UC" if KD advantage values in the data match the values in the hash. 
             // *(Causes multiple rows to be selected if multiple rows match (e.g. selecting Boxer's TAP 7, then refreshing).)
@@ -492,7 +498,6 @@ function UCGILLEY(rows){
             // Create a new group, set data as a new associative array of KD types and values [e.g. "KD", "+107"], then append the other data
             .selectAll().data(function(d){ return [{key:"KD",value:"+"+DATA_KD(d)},{key:"KDR",value:"+"+DATA_KDR(d)},{key:"KDBR",value:"+"+DATA_KDBR(d)}].concat(d3.entries(d));})
             .enter().append("td").text(function(d){return d.value;}); // Add table cells and fill with values
-
   KDTABLE.selectAll("tbody tr").on("click",function(d){   // *Changed to add the click listener to the row, rather than each cell*
               var p = this;
               var pd = d3.select(p).datum();
@@ -517,7 +522,7 @@ function UCGILLEY(rows){
               d3.select("#KDCMD").text(pd["Command"]);
 
             });
-
+// FRAMETABLE = <table> element inside the <div> inside the FRAMES <div>
   FRAMETABLE.append("thead").append("tr").selectAll("th").data(["TOTAL"].concat(keys).concat([""])).enter().append("th").text(function(d){return d;})
             .on("click",function(d,i){
               FRAMETABLE.selectAll("tbody tr").sort(function(a,b){
@@ -537,9 +542,9 @@ function UCGILLEY(rows){
             // .classed("UC",function(d){return +DATA_STARTUP(d)==HASHSTARTUP && +d["Active"]==HASHACTIVE && +d["Recovery"]==HASHRECOVERY; })
             .selectAll("td").data(function(d){return [{key:"TOTAL",value:d["Total "] || d["Total"]}].concat(d3.entries(d)).concat([{key:"U C",value:"U C"}]);})
             .enter().append("td").text(function(d){ if (d.value == "dash forward") UCROW.DASH = this; return d.value;})
-            .classed("UC",function(d){return d.key=="TOTAL" && FRAMEKILL>1 && +d.value==FRAMEKILL-1; })
-            .on("click",function(d){
-              var p = this.parentNode;
+            .classed("UC",function(d){return d.key=="TOTAL" && FRAMEKILL>1 && +d.value==FRAMEKILL-1; });
+  FRAMETABLE.selectAll("tbody tr").on("click",function(d){
+              var p = this;
               var pd = d3.select(p).datum();
               
 
@@ -590,7 +595,7 @@ function UCGILLEY(rows){
 
               }
               UCOKI(0);
-            });
+            }); // end of onClick
 
 
   var totalrows = rows.filter(function(d){ var t=d["Total "]||d["Total"]; return !isNaN(t) && t != "";});
@@ -620,11 +625,11 @@ function UCGILLEY(rows){
               if (isNaN(parseInt(bdn))) return -1;
               return +adn < +bdn ? 1 : +adn > +bdn ? -1 : a.trow < b.trow ? -1 : a.trow > b.trow ? 1 : 0;
             });});  
-  TOTALSTABLE.append("tbody").selectAll("tr").data(totalrows).enter().append("tr")            
+  TOTALSTABLE.append("tbody").selectAll("tr").data(totalrows).enter().append("tr")
             .selectAll("td").data(function(d){ return [{key:"TOTAL",value:d["Total "] || d["Total"]}].concat(d3.entries(d));})
-            .enter().append("td").text(function(d){return d.value;})
-            .on("click",function(d){
-              var p = this.parentNode;
+            .enter().append("td").text(function(d){return d.value;});
+  TOTALSTABLE.selectAll("tbody tr").on("click",function(d){
+              var p = this;
               var pd = d3.select(p).datum();
               
 
